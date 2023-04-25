@@ -91,8 +91,12 @@ local function handleOnDisconnected()
 end
 client:register('OnDisconnected', handleOnDisconnected)
 
--- Function is called when a message is published to a subscribed topic
-local function handleOnReceive(topic, data, _, _)
+--- Function is called when a message is published to a subscribed topic
+---@param topic string
+---@param data binary
+---@param qos? MQTTClient.QOS
+---@param retain? MQTTClient.Retain
+local function handleOnReceive(topic, data, qos, retain)
   print("handleOnReceive: topic '" .. topic .. "' message '" .. data .. "'")
   -- This sample publishes the received messages to test/topic2
   client:publish( 'test/topic2', "MQTTClient API works. Received '" .. data .. "'" )
