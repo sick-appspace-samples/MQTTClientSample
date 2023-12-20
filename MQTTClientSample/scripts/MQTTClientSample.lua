@@ -77,29 +77,33 @@ local function handleOnStarted()
 end
 Script.register('Engine.OnStarted', handleOnStarted)
 
--- Function is called every time a connection is established.
--- Subscribing to topics is done here.
+---Function is called every time a connection is established.
+---Subscribing to topics is done here.
 local function handleOnConnected()
   print('handleOnConnected')
   client:subscribe('test/topic1')
 end
 client:register('OnConnected', handleOnConnected)
 
--- Function is called on disconnect event
+---Function is called on disconnect event
 local function handleOnDisconnected()
   print('handleOnDisconnected')
 end
 client:register('OnDisconnected', handleOnDisconnected)
 
--- Function is called when a message is published to a subscribed topic
-local function handleOnReceive(topic, data, _, _)
+---Function is called when a message is published to a subscribed topic
+---@param topic string
+---@param data binary
+---@param qos? MQTTClient.QOS
+---@param retain? MQTTClient.Retain
+local function handleOnReceive(topic, data, qos, retain)
   print("handleOnReceive: topic '" .. topic .. "' message '" .. data .. "'")
   -- This sample publishes the received messages to test/topic2
   client:publish( 'test/topic2', "MQTTClient API works. Received '" .. data .. "'" )
 end
 client:register('OnReceive', handleOnReceive)
 
--- Function is called periodically on timer expiration
+---Function is called periodically on timer expiration
 local function handleReconnectTimer()
   if (not client:isConnected()) then
     print('try to reconnect')
